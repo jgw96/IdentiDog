@@ -1,0 +1,6 @@
+{
+  "appId": "com.identidog.app",
+  "appName": "IdentiDog",
+  "bundledWebRuntime": false,
+  "webDir": "www"
+}

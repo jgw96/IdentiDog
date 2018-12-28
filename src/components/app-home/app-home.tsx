@@ -42,6 +42,17 @@ export class AppHome {
 
     if (this.stream) {
       this.videoEl.srcObject = this.stream;
+
+      this.videoEl.onloadedmetadata = async () => {
+        try {
+          await this.videoEl.play();
+        }
+        catch (err) {
+          console.log(err);
+        }
+      };
+
+      console.log('connected stream to video element');
       this.setUpCamera();
     }
   }
@@ -81,7 +92,7 @@ export class AppHome {
         {
           this.streaming ?
             <main>
-              <video id="mainVideo" autoplay ref={(el) => this.videoEl = el as HTMLVideoElement}></video>
+              <video id="mainVideo" ref={(el) => this.videoEl = el as HTMLVideoElement}></video>
             </main>
             :
             <div id='intro'>
