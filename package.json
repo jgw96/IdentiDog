@@ -1,0 +1,25 @@
+{
+  "name": "dogidentify",
+  "private": true,
+  "version": "0.0.1",
+  "description": "dogidentify",
+  "license": "MIT",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "stencil build",
+    "start": "stencil build --dev --watch --serve",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watch"
+  },
+  "dependencies": {
+    "@capacitor/cli": "^1.0.0-beta.13",
+    "@capacitor/core": "^1.0.0-beta.13",
+    "@ionic/core": "4.0.0-rc.0"
+  },
+  "devDependencies": {
+    "@stencil/core": "0.16.1",
+    "workbox-build": "3.4.1"
+  }
+}

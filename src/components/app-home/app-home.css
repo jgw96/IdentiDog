@@ -1,0 +1,26 @@
+#mainVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+#intro {
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: black;
+  padding: 1em;
+  margin: 2em;
+}
+
+#intro img {
+  margin-bottom: 2em;
+}
