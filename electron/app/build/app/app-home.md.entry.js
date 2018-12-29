@@ -44,16 +44,17 @@ class AppHome {
         });
         if (this.stream) {
             this.videoEl.srcObject = this.stream;
-            this.videoEl.onloadedmetadata = async () => {
-                try {
-                    await this.videoEl.play();
-                }
-                catch (err) {
-                    console.log(err);
-                }
-            };
+            /*this.videoEl.onloadedmetadata = async () => {
+              try {
+                await this.videoEl.play();
+              }
+              catch (err) {
+                console.log(err);
+                console.log(err.name, err.message);
+              }
+            };*/
             console.log('connected stream to video element');
-            // this.setUpCamera();
+            this.setUpCamera();
         }
     }
     setUpCamera() {
@@ -85,7 +86,7 @@ class AppHome {
             h("ion-content", null,
                 this.streaming ?
                     h("main", null,
-                        h("video", { id: "mainVideo", ref: (el) => this.videoEl = el }))
+                        h("video", { autoplay: true, id: "mainVideo", ref: (el) => this.videoEl = el }))
                     :
                         h("div", { id: 'intro' },
                             h("img", { src: '/assets/dog.svg', alt: 'dog header image' }),
