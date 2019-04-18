@@ -1,6 +1,6 @@
 import { Component, Prop, State } from '@stencil/core';
 
-import { identify } from '../../services/vision';
+import { identify, doSearch } from '../../services/vision';
 
 declare var ImageCapture: any;
 
@@ -43,16 +43,6 @@ export class AppHome {
     if (this.stream) {
       this.videoEl.srcObject = this.stream;
 
-      /*this.videoEl.onloadedmetadata = async () => {
-        try {
-          await this.videoEl.play();
-        }
-        catch (err) {
-          console.log(err);
-          console.log(err.name, err.message);
-        }
-      };*/
-
       console.log('connected stream to video element');
       this.setUpCamera();
     }
@@ -79,12 +69,15 @@ export class AppHome {
   }
 
   async showPred(pred) {
-    const toast = await this.toastCtrl.create({
+    /*const toast = await this.toastCtrl.create({
       message: `I am ${Math.round((pred.probability / 1) * 100)}% sure this is a ${pred.tagName}`,
       showCloseButton: true,
       closeButtonText: 'OK',
     });
-    await toast.present();
+    await toast.present();*/
+
+    const data = await doSearch(pred.tagName);
+    console.log(data);
   }
 
   render() {

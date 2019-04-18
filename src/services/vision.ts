@@ -15,3 +15,15 @@ export async function identify(blob: Blob) {
   return data;
 }
 
+export async function doSearch(query: string) {
+  const response = await fetch(`https://api.cognitive.microsoft.com/bing/v7.0/search?q=${query}`, {
+    headers: {
+      "Ocp-Apim-Subscription-Key": "184ed81eabbe4ae6ac7e935a6c2493ff"
+    }
+  });
+
+  const data = await response.json();
+
+  console.log(data);
+  return data;
+}
