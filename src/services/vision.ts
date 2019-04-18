@@ -1,9 +1,10 @@
 export async function identify(blob: Blob) {
-  const response = await fetch('https://southcentralus.api.cognitive.microsoft.com/customvision/v2.0/Prediction/216d2186-e826-4d9e-9ab4-b42b34ed65d4/image?iterationId=778e2d68-a120-45c1-bbeb-e18fc243d970', {
+  console.log(blob);
+  const response = await fetch('https://westus2.api.cognitive.microsoft.com/customvision/v3.0/Prediction/1b66b7e0-4967-460a-af78-be04442be93f/classify/iterations/Iteration1/image', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/octet-stream',
-      'Prediction-Key': '2a58718ea5834c3bab8f64e0f5ce67e3'
+      'Prediction-Key': '4206e2412f6c4e1685dfeeec2edd762d'
     },
     body: blob
   });
@@ -13,3 +14,4 @@ export async function identify(blob: Blob) {
   
   return data;
 }
+

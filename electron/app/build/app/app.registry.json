@@ -2,183 +2,184 @@
   "namespace": "App",
   "fsNamespace": "app",
   "loader": "../app.js",
-  "corePolyfilled": "es5-build-disabled.js",
   "global": "app.global.js",
-  "core": "app.core.js",
+  "core": "app.wfftoimb.js",
+  "corePolyfilled": "app.rocvt2xo.js",
   "components": {
     "app-home": {
       "bundleIds": {
-        "ios": "app-home.ios",
-        "md": "app-home.md"
+        "ios": "fkn00lub",
+        "md": "jmmd8jo5"
       }
     },
     "app-profile": {
       "bundleIds": {
-        "ios": "app-profile.ios",
-        "md": "app-profile.md"
+        "ios": "ldhqx8y3",
+        "md": "whiytezj"
       }
     },
     "app-root": {
       "bundleIds": {
-        "$": "app-root"
+        "$": "ygsswijd"
       }
     },
     "ion-animation-controller": {
       "bundleIds": {
-        "$": "ion-animation-controller"
+        "$": "xlrit5rt"
       }
     },
     "ion-app": {
       "bundleIds": {
-        "$": "app-root"
+        "$": "ygsswijd"
       }
     },
     "ion-back-button": {
       "bundleIds": {
-        "ios": "app-profile.ios",
-        "md": "app-profile.md"
+        "ios": "ldhqx8y3",
+        "md": "whiytezj"
       },
       "encapsulation": "scoped"
     },
     "ion-backdrop": {
       "bundleIds": {
-        "ios": "app-home.ios",
-        "md": "app-home.md"
+        "ios": "fkn00lub",
+        "md": "jmmd8jo5"
       },
       "encapsulation": "shadow"
     },
     "ion-button": {
       "bundleIds": {
-        "ios": "ion-button.ios",
-        "md": "ion-button.md"
+        "ios": "1e4xacf6",
+        "md": "opnq7plp"
       },
       "encapsulation": "shadow"
     },
     "ion-buttons": {
       "bundleIds": {
-        "ios": "app-profile.ios",
-        "md": "app-profile.md"
+        "ios": "ldhqx8y3",
+        "md": "whiytezj"
       },
       "encapsulation": "scoped"
     },
     "ion-content": {
       "bundleIds": {
-        "$": "ion-content"
+        "$": "envyk7jn"
       },
       "encapsulation": "shadow"
     },
     "ion-fab": {
       "bundleIds": {
-        "ios": "app-home.ios",
-        "md": "app-home.md"
+        "ios": "fkn00lub",
+        "md": "jmmd8jo5"
       },
       "encapsulation": "shadow"
     },
     "ion-fab-button": {
       "bundleIds": {
-        "ios": "app-home.ios",
-        "md": "app-home.md"
+        "ios": "fkn00lub",
+        "md": "jmmd8jo5"
       },
       "encapsulation": "shadow"
     },
     "ion-header": {
       "bundleIds": {
-        "ios": "app-profile.ios",
-        "md": "app-profile.md"
+        "ios": "ldhqx8y3",
+        "md": "whiytezj"
       }
     },
     "ion-icon": {
       "bundleIds": {
-        "$": "ion-icon"
+        "$": "41a9fj8w"
       },
       "encapsulation": "shadow"
     },
     "ion-item": {
       "bundleIds": {
-        "ios": "app-profile.ios",
-        "md": "app-profile.md"
+        "ios": "ldhqx8y3",
+        "md": "whiytezj"
       },
       "encapsulation": "shadow"
     },
     "ion-label": {
       "bundleIds": {
-        "ios": "app-profile.ios",
-        "md": "app-profile.md"
+        "ios": "ldhqx8y3",
+        "md": "whiytezj"
       },
       "encapsulation": "scoped"
     },
     "ion-loading": {
       "bundleIds": {
-        "ios": "app-home.ios",
-        "md": "app-home.md"
+        "ios": "fkn00lub",
+        "md": "jmmd8jo5"
       },
       "encapsulation": "scoped"
     },
     "ion-loading-controller": {
       "bundleIds": {
-        "ios": "app-home.ios",
-        "md": "app-home.md"
+        "ios": "fkn00lub",
+        "md": "jmmd8jo5"
       }
     },
     "ion-nav": {
       "bundleIds": {
-        "$": "app-root"
+        "$": "ygsswijd"
       },
       "encapsulation": "shadow"
     },
     "ion-ripple-effect": {
       "bundleIds": {
-        "$": "ion-ripple-effect"
+        "$": "tlmwejgj"
       },
       "encapsulation": "shadow"
     },
     "ion-route": {
       "bundleIds": {
-        "$": "app-root"
+        "$": "ygsswijd"
       }
     },
     "ion-router": {
       "bundleIds": {
-        "$": "app-root"
+        "$": "ygsswijd"
       }
     },
     "ion-spinner": {
       "bundleIds": {
-        "ios": "app-home.ios",
-        "md": "app-home.md"
+        "ios": "fkn00lub",
+        "md": "jmmd8jo5"
       },
       "encapsulation": "shadow"
     },
     "ion-title": {
       "bundleIds": {
-        "ios": "app-profile.ios",
-        "md": "app-profile.md"
+        "ios": "ldhqx8y3",
+        "md": "whiytezj"
       },
       "encapsulation": "shadow"
     },
     "ion-toast": {
       "bundleIds": {
-        "ios": "ion-toast.ios",
-        "md": "ion-toast.md"
+        "ios": "27gkek2v",
+        "md": "rzxngasf"
       },
       "encapsulation": "shadow"
     },
     "ion-toast-controller": {
       "bundleIds": {
-        "$": "ion-toast-controller"
+        "ios": "27gkek2v",
+        "md": "rzxngasf"
       }
     },
     "ion-toggle": {
       "bundleIds": {
-        "ios": "app-profile.ios",
-        "md": "app-profile.md"
+        "ios": "ldhqx8y3",
+        "md": "whiytezj"
       },
       "encapsulation": "shadow"
     },
     "ion-toolbar": {
       "bundleIds": {
-        "ios": "app-profile.ios",
-        "md": "app-profile.md"
+        "ios": "ldhqx8y3",
+        "md": "whiytezj"
       },
       "encapsulation": "shadow"
     }
