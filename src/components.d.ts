@@ -25,6 +25,13 @@ export namespace Components {
 
   interface AppRoot {}
   interface AppRootAttributes extends StencilHTMLAttributes {}
+
+  interface PredDetail {
+    'data': any;
+  }
+  interface PredDetailAttributes extends StencilHTMLAttributes {
+    'data'?: any;
+  }
 }
 
 declare global {
@@ -32,12 +39,14 @@ declare global {
     'AppHome': Components.AppHome;
     'AppProfile': Components.AppProfile;
     'AppRoot': Components.AppRoot;
+    'PredDetail': Components.PredDetail;
   }
 
   interface StencilIntrinsicElements {
     'app-home': Components.AppHomeAttributes;
     'app-profile': Components.AppProfileAttributes;
     'app-root': Components.AppRootAttributes;
+    'pred-detail': Components.PredDetailAttributes;
   }
 
 
@@ -59,16 +68,24 @@ declare global {
     new (): HTMLAppRootElement;
   };
 
+  interface HTMLPredDetailElement extends Components.PredDetail, HTMLStencilElement {}
+  var HTMLPredDetailElement: {
+    prototype: HTMLPredDetailElement;
+    new (): HTMLPredDetailElement;
+  };
+
   interface HTMLElementTagNameMap {
     'app-home': HTMLAppHomeElement
     'app-profile': HTMLAppProfileElement
     'app-root': HTMLAppRootElement
+    'pred-detail': HTMLPredDetailElement
   }
 
   interface ElementTagNameMap {
     'app-home': HTMLAppHomeElement;
     'app-profile': HTMLAppProfileElement;
     'app-root': HTMLAppRootElement;
+    'pred-detail': HTMLPredDetailElement;
   }
 
 

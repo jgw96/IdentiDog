@@ -15,9 +15,6 @@
     "test.watch": "stencil test --spec --e2e --watch"
   },
   "dependencies": {
-    "@capacitor/android": "^1.0.0-beta.13",
-    "@capacitor/cli": "^1.0.0-beta.13",
-    "@capacitor/core": "^1.0.0-beta.13",
     "@ionic/core": "^4.3.0"
   },
   "devDependencies": {

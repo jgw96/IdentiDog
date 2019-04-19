@@ -1,0 +1,5 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target" : { "namespace": "android_app", "package_name": "com.app.identidog",
+               "sha256_cert_fingerprints": ["F1:DA:CC:96:E7:36:03:BD:B0:02:EC:6A:9C:A9:2F:94:C8:63:45:8E:30:FB:03:8E:9A:88:49:A1:AC:B3:76:3C"] }
+}]

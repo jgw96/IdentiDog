@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+  webapp:
+    build: .
+    command: npm run dev
+    volumes:
+      - ./
+    ports:
+      - "3333:3333"

@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">IdentiDog</string>
-    <string name="title_activity_main">IdentiDog</string>
-    <string name="package_name">com.identidog.app</string>
-    <string name="fileprovider_authority">com.identidog.app.fileprovider</string>
-    <string name="custom_url_scheme">com.identidog.app</string>
-</resources>

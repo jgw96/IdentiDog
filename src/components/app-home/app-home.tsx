@@ -16,6 +16,7 @@ export class AppHome {
 
   @Prop({ connect: 'ion-toast-controller' }) toastCtrl: HTMLIonToastControllerElement | null = null;
   @Prop({ connect: 'ion-loading-controller' }) loadingCtrl: HTMLIonLoadingControllerElement | null = null;
+  @Prop({ connect: 'ion-modal-controller' }) modalCtrl: HTMLIonModalControllerElement | null = null;
 
   @State() streaming: boolean = false;
 
@@ -78,6 +79,14 @@ export class AppHome {
 
     const data = await doSearch(pred.tagName);
     console.log(data);
+
+    const modal = await this.modalCtrl.create(({
+      component: 'pred-detail',
+      componentProps: {
+        data: data.entities.value[0]
+      }
+    } as any));
+    await modal.present();
   }
 
   render() {
