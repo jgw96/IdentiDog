@@ -29,6 +29,9 @@ export class AppHome {
         await this.doStream();
       }
     }
+    else {
+      await this.doStream();
+    }
   }
 
   async doStream() {
