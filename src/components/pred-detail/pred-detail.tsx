@@ -132,7 +132,7 @@ export class PredDetail {
 
       <ion-content padding>
         <dv id="imageBlock">
-          <img height={this.data.image.sourceHeight} src={this.data.image.hostPageUrl} alt={this.data.image.name}></img>
+          <img height={this.data.image.sourceHeight} src={this.data.image.hostPageUrl.replace('http', 'https')} alt={this.data.image.name}></img>
           <a href={this.data.image.provider[0].url}>Source</a>
         </dv>
 
