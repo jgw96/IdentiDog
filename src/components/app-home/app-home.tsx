@@ -44,6 +44,10 @@ export class AppHome {
     if (this.stream) {
       this.videoEl.srcObject = this.stream;
 
+      if ((window as any).ExperimentalBadge) {
+        (window as any).ExperimentalBadge.set()
+      }
+
       console.log('connected stream to video element');
       this.setUpCamera();
     }
@@ -70,13 +74,6 @@ export class AppHome {
   }
 
   async showPred(pred) {
-    /*const toast = await this.toastCtrl.create({
-      message: `I am ${Math.round((pred.probability / 1) * 100)}% sure this is a ${pred.tagName}`,
-      showCloseButton: true,
-      closeButtonText: 'OK',
-    });
-    await toast.present();*/
-
     const data = await doSearch(pred.tagName);
     console.log(data);
 
@@ -92,6 +89,8 @@ export class AppHome {
   render() {
     return [
       <ion-content>
+        {this.streaming ? <app-login></app-login> : null}
+        
         {
           this.streaming ?
             <main>

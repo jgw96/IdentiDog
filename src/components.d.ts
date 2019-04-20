@@ -16,6 +16,9 @@ export namespace Components {
   interface AppHome {}
   interface AppHomeAttributes extends StencilHTMLAttributes {}
 
+  interface AppLogin {}
+  interface AppLoginAttributes extends StencilHTMLAttributes {}
+
   interface AppProfile {
     'name': string;
   }
@@ -25,6 +28,14 @@ export namespace Components {
 
   interface AppRoot {}
   interface AppRootAttributes extends StencilHTMLAttributes {}
+
+  interface PopoverPage {
+    'userAgent': any;
+  }
+  interface PopoverPageAttributes extends StencilHTMLAttributes {
+    'onLoggedOut'?: (event: CustomEvent) => void;
+    'userAgent'?: any;
+  }
 
   interface PredDetail {
     'data': any;
@@ -37,15 +48,19 @@ export namespace Components {
 declare global {
   interface StencilElementInterfaces {
     'AppHome': Components.AppHome;
+    'AppLogin': Components.AppLogin;
     'AppProfile': Components.AppProfile;
     'AppRoot': Components.AppRoot;
+    'PopoverPage': Components.PopoverPage;
     'PredDetail': Components.PredDetail;
   }
 
   interface StencilIntrinsicElements {
     'app-home': Components.AppHomeAttributes;
+    'app-login': Components.AppLoginAttributes;
     'app-profile': Components.AppProfileAttributes;
     'app-root': Components.AppRootAttributes;
+    'popover-page': Components.PopoverPageAttributes;
     'pred-detail': Components.PredDetailAttributes;
   }
 
@@ -54,6 +69,12 @@ declare global {
   var HTMLAppHomeElement: {
     prototype: HTMLAppHomeElement;
     new (): HTMLAppHomeElement;
+  };
+
+  interface HTMLAppLoginElement extends Components.AppLogin, HTMLStencilElement {}
+  var HTMLAppLoginElement: {
+    prototype: HTMLAppLoginElement;
+    new (): HTMLAppLoginElement;
   };
 
   interface HTMLAppProfileElement extends Components.AppProfile, HTMLStencilElement {}
@@ -68,6 +89,12 @@ declare global {
     new (): HTMLAppRootElement;
   };
 
+  interface HTMLPopoverPageElement extends Components.PopoverPage, HTMLStencilElement {}
+  var HTMLPopoverPageElement: {
+    prototype: HTMLPopoverPageElement;
+    new (): HTMLPopoverPageElement;
+  };
+
   interface HTMLPredDetailElement extends Components.PredDetail, HTMLStencilElement {}
   var HTMLPredDetailElement: {
     prototype: HTMLPredDetailElement;
@@ -76,15 +103,19 @@ declare global {
 
   interface HTMLElementTagNameMap {
     'app-home': HTMLAppHomeElement
+    'app-login': HTMLAppLoginElement
     'app-profile': HTMLAppProfileElement
     'app-root': HTMLAppRootElement
+    'popover-page': HTMLPopoverPageElement
     'pred-detail': HTMLPredDetailElement
   }
 
   interface ElementTagNameMap {
     'app-home': HTMLAppHomeElement;
+    'app-login': HTMLAppLoginElement;
     'app-profile': HTMLAppProfileElement;
     'app-root': HTMLAppRootElement;
+    'popover-page': HTMLPopoverPageElement;
     'pred-detail': HTMLPredDetailElement;
   }
 

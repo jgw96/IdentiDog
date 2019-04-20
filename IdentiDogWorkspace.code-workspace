@@ -1,11 +1,14 @@
 {
 	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "C:\\Users\\juwillis\\AndroidStudioProjects\\IdentiDog"
-		}
-	],
+    {
+      "path": "."
+    },
+    {
+      "path": "C:\\Users\\juwillis\\AndroidStudioProjects\\IdentiDog"
+    },
+    {
+      "path": "C:\\Users\\juwillis\\Projects\\musically-ionic\\src\\components\\popover-page"
+    }
+  ],
   "settings": {}
 }
