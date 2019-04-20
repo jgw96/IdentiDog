@@ -89,8 +89,8 @@ export class AppHome {
   render() {
     return [
       <ion-content>
-        {this.streaming ? <app-login></app-login> : null}
-        
+        <app-login></app-login>
+
         {
           this.streaming ?
             <main>

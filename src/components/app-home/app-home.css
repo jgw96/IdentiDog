@@ -23,4 +23,9 @@
 
 #intro img {
   margin-bottom: 2em;
+  max-width: 26em;
+}
+
+#intro p {
+  max-width: 28em;
 }
