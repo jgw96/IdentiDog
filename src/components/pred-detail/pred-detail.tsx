@@ -140,7 +140,7 @@ export class PredDetail {
           <p>{this.data.description}</p>
         </div>
 
-        <ion-button shape="round" expand="block" href={this.data.webSearchUrl}>More Info</ion-button>
+        <ion-button shape="round" expand="block" href={this.data.webSearchUrl}>Search with Bing</ion-button>
 
         {/*<amp-ad width="100vw" height="320"
           type="adsense"
