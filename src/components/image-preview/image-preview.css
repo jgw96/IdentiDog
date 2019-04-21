@@ -1,0 +1,31 @@
+#imagePreviewMain {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+#imagePreviewMain img {
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
+  border-radius: initial;
+  background: var(--ion-color-dark);
+}
+
+#imagePreviewMain ion-button {
+  z-index: 9999;
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+}
+
+#infoSection {
+  position: absolute;
+  color: white;
+  padding: 16px;
+}
+
+#infoSection h1 {
+  font-size: 2em;
+}

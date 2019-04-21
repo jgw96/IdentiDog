@@ -15,7 +15,7 @@ export class PredDetail {
   @Element() el: HTMLElement;
 
   componentDidLoad() {
-    console.log(this.data);
+    console.log('data', this.data);
   }
 
   async dismiss() {

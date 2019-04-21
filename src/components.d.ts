@@ -29,6 +29,15 @@ export namespace Components {
   interface AppRoot {}
   interface AppRootAttributes extends StencilHTMLAttributes {}
 
+  interface ImagePreview {
+    'image': Blob;
+    'pred': any;
+  }
+  interface ImagePreviewAttributes extends StencilHTMLAttributes {
+    'image'?: Blob;
+    'pred'?: any;
+  }
+
   interface PopoverPage {
     'userAgent': any;
   }
@@ -51,6 +60,7 @@ declare global {
     'AppLogin': Components.AppLogin;
     'AppProfile': Components.AppProfile;
     'AppRoot': Components.AppRoot;
+    'ImagePreview': Components.ImagePreview;
     'PopoverPage': Components.PopoverPage;
     'PredDetail': Components.PredDetail;
   }
@@ -60,6 +70,7 @@ declare global {
     'app-login': Components.AppLoginAttributes;
     'app-profile': Components.AppProfileAttributes;
     'app-root': Components.AppRootAttributes;
+    'image-preview': Components.ImagePreviewAttributes;
     'popover-page': Components.PopoverPageAttributes;
     'pred-detail': Components.PredDetailAttributes;
   }
@@ -89,6 +100,12 @@ declare global {
     new (): HTMLAppRootElement;
   };
 
+  interface HTMLImagePreviewElement extends Components.ImagePreview, HTMLStencilElement {}
+  var HTMLImagePreviewElement: {
+    prototype: HTMLImagePreviewElement;
+    new (): HTMLImagePreviewElement;
+  };
+
   interface HTMLPopoverPageElement extends Components.PopoverPage, HTMLStencilElement {}
   var HTMLPopoverPageElement: {
     prototype: HTMLPopoverPageElement;
@@ -106,6 +123,7 @@ declare global {
     'app-login': HTMLAppLoginElement
     'app-profile': HTMLAppProfileElement
     'app-root': HTMLAppRootElement
+    'image-preview': HTMLImagePreviewElement
     'popover-page': HTMLPopoverPageElement
     'pred-detail': HTMLPredDetailElement
   }
@@ -115,6 +133,7 @@ declare global {
     'app-login': HTMLAppLoginElement;
     'app-profile': HTMLAppProfileElement;
     'app-root': HTMLAppRootElement;
+    'image-preview': HTMLImagePreviewElement;
     'popover-page': HTMLPopoverPageElement;
     'pred-detail': HTMLPredDetailElement;
   }

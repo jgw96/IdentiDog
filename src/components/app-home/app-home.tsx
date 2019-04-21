@@ -69,10 +69,21 @@ export class AppHome {
       await loading.present();
 
       const imageBlob = await this.imageCapture.takePhoto();
+
       const pred = await identify(imageBlob);
+      console.log(pred);
 
       await loading.dismiss();
-      await this.showPred(pred.predictions[0])
+
+      const modal = await this.modalCtrl.create({
+        component: "image-preview",
+        componentProps: {
+          image: imageBlob,
+          pred: pred.predictions[0]
+        }
+      });
+      await modal.present();
+      // await this.showPred(pred.predictions[0])
     }
   }
 
@@ -103,7 +114,7 @@ export class AppHome {
             <div id='intro'>
 
               <img src='/assets/dog.svg' alt='dog header image'></img>
-              
+
               <h1>IdentiDog</h1>
 
               <p>
