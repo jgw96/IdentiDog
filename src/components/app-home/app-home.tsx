@@ -20,6 +20,17 @@ export class AppHome {
 
   @State() streaming: boolean = false;
 
+  componentWillLoad() {
+    const darkTheme = localStorage.getItem("theme");
+
+    if (darkTheme) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } 
+    else {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  }
+
   async componentDidLoad() {
     if ((navigator as any).permissions) {
       const status = await (navigator as any).permissions.query({ name: 'camera' });
@@ -100,10 +111,39 @@ export class AppHome {
     await modal.present();
   }
 
+  async switchTheme() {
+    const darkTheme = localStorage.getItem("theme");
+
+    if (darkTheme) {
+      document.documentElement.setAttribute('data-theme', 'light');
+      localStorage.removeItem("theme");
+
+      const toast = await this.toastCtrl.create({
+        message: "Light theme enabled",
+        duration: 1500
+      });
+      await toast.present();
+    }
+    else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem("theme", "dark");
+
+      const toast = await this.toastCtrl.create({
+        message: "Dark theme enabled",
+        duration: 1500
+      });
+      await toast.present();
+    }
+  }
+
   render() {
     return [
       <ion-content>
         <app-login></app-login>
+
+        <ion-button onClick={() => this.switchTheme()} fill="clear" id="darkModeButton">
+          <ion-icon name="moon"></ion-icon>
+        </ion-button>
 
         {
           this.streaming ?

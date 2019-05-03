@@ -14,6 +14,7 @@ export class ImagePreview {
   @Prop() image: Blob;
   @Prop() pred: any;
   @Prop({ connect: 'ion-modal-controller' }) modalCtrl: HTMLIonModalControllerElement;
+  @Prop({ connect: 'ion-alert-controller' }) alertCtrl: HTMLIonAlertControllerElement;
 
   @State() imageSrc: any;
 
@@ -27,6 +28,8 @@ export class ImagePreview {
     const data = await doSearch(this.pred.tagName);
     console.log(data);
 
+    await (this.el.closest('ion-modal')).dismiss();
+
     const modal = await this.modalCtrl.create(({
       component: 'pred-detail',
       componentProps: {
@@ -36,6 +39,41 @@ export class ImagePreview {
     await modal.present();
   }
 
+  async download() {
+    const alert = await this.alertCtrl.create({
+      header: 'Save Image',
+      inputs: [
+        {
+          placeholder: 'dog.png',
+          type: 'text',
+          name: 'fileName'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel')
+          }
+        }, {
+          text: 'Save',
+          handler: (data) => {
+            console.log(data);
+            const anchor = document.createElement("a");
+            anchor.href = this.imageSrc;
+            anchor.download = data.fileName;
+
+            anchor.click();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
   async dismiss() {
     await this.el.closest('ion-modal').dismiss();
   }
@@ -43,14 +81,18 @@ export class ImagePreview {
   render() {
     return [
       <ion-header>
-        <ion-toolbar color="primary">
+        <ion-toolbar no-border color="primary">
           <ion-buttons slot="start">
             <ion-button onClick={() => this.dismiss()}>
               <ion-icon name="close"></ion-icon>
             </ion-button>
           </ion-buttons>
 
-          <ion-title>{this.pred ? this.pred.tagName : null}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button onClick={() => this.download()}>
+              <ion-icon name="save"></ion-icon>
+            </ion-button>
+          </ion-buttons>
         </ion-toolbar>
       </ion-header>,
       <ion-content>

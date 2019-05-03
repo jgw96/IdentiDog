@@ -113,7 +113,7 @@ export class PredDetail {
   render() {
     return [
       <ion-header>
-        <ion-toolbar color="primary">
+        <ion-toolbar no-border color="primary">
           <ion-buttons slot="start">
             <ion-button onClick={() => this.dismiss()}>
               <ion-icon name="close"></ion-icon>

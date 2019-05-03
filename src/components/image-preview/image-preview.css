@@ -9,6 +9,9 @@
   height: 100%;
   width: 100%;
   border-radius: initial;
+}
+
+[data-theme="dark"] #imagePreviewMain img {
   background: var(--ion-color-dark);
 }
 
