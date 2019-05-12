@@ -30,11 +30,11 @@ export namespace Components {
   interface AppRootAttributes extends StencilHTMLAttributes {}
 
   interface ImagePreview {
-    'image': Blob;
+    'image': any;
     'pred': any;
   }
   interface ImagePreviewAttributes extends StencilHTMLAttributes {
-    'image'?: Blob;
+    'image'?: any;
     'pred'?: any;
   }
 

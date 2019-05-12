@@ -11,7 +11,7 @@ export class ImagePreview {
 
   @Element() el: HTMLElement;
 
-  @Prop() image: Blob;
+  @Prop() image: any;
   @Prop() pred: any;
   @Prop({ connect: 'ion-modal-controller' }) modalCtrl: HTMLIonModalControllerElement;
   @Prop({ connect: 'ion-alert-controller' }) alertCtrl: HTMLIonAlertControllerElement;
@@ -39,6 +39,28 @@ export class ImagePreview {
     await modal.present();
   }
 
+  base64ToBlob(base64, mime) {
+    mime = mime || '';
+    var sliceSize = 1024;
+    var byteChars = window.atob(base64);
+    var byteArrays = [];
+
+    for (var offset = 0, len = byteChars.length; offset < len; offset += sliceSize) {
+      var slice = byteChars.slice(offset, offset + sliceSize);
+
+      var byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      var byteArray = new Uint8Array(byteNumbers);
+
+      byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, { type: mime });
+  }
+
   async download() {
     const alert = await this.alertCtrl.create({
       header: 'Save Image',
@@ -59,13 +81,24 @@ export class ImagePreview {
           }
         }, {
           text: 'Save',
-          handler: (data) => {
-            console.log(data);
-            const anchor = document.createElement("a");
-            anchor.href = this.imageSrc;
-            anchor.download = data.fileName;
+          handler: async () => {
 
-            anchor.click();
+            var reader = new FileReader();
+
+            reader.onloadend = async () => {
+
+              console.log(reader.result);
+
+              const response = await fetch('https://identidog-functions.azurewebsites.net/api/SaveImage', {
+                method: "POST",
+                body: reader.result
+              });
+
+              const res = await response.text();
+              console.log(res);
+            }
+
+            reader.readAsDataURL(this.image);
           }
         }
       ]

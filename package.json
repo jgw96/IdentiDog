@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@ionic/core": "^4.3.1",
+    "@tensorflow-models/coco-ssd": "^1.0.2",
+    "@tensorflow/tfjs": "^1.1.2",
     "msal": "^0.2.4"
   },
   "devDependencies": {

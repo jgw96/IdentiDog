@@ -1,6 +1,8 @@
-import { Component, Prop, State } from '@stencil/core';
+import { Component, Element, Prop, State } from '@stencil/core';
 
 import { identify, doSearch } from '../../services/vision';
+
+import * as cocoSsd from '@tensorflow-models/coco-ssd';
 
 declare var ImageCapture: any;
 
@@ -11,27 +13,36 @@ declare var ImageCapture: any;
 export class AppHome {
 
   videoEl: HTMLVideoElement;
+  canvasElement: HTMLCanvasElement;
   stream: MediaStream;
   imageCapture: any;
+  context: CanvasRenderingContext2D;
+
+  startLoop: number;
+
+  @Element() el: HTMLElement;
 
   @Prop({ connect: 'ion-toast-controller' }) toastCtrl: HTMLIonToastControllerElement | null = null;
   @Prop({ connect: 'ion-loading-controller' }) loadingCtrl: HTMLIonLoadingControllerElement | null = null;
   @Prop({ connect: 'ion-modal-controller' }) modalCtrl: HTMLIonModalControllerElement | null = null;
 
   @State() streaming: boolean = false;
+  @State() model: cocoSsd.ObjectDetection;
 
   componentWillLoad() {
     const darkTheme = localStorage.getItem("theme");
 
     if (darkTheme) {
       document.documentElement.setAttribute('data-theme', 'dark');
-    } 
+    }
     else {
       document.documentElement.setAttribute('data-theme', 'light');
     }
   }
 
   async componentDidLoad() {
+    console.log(this.videoEl);
+
     if ((navigator as any).permissions) {
       const status = await (navigator as any).permissions.query({ name: 'camera' });
       console.log(status.state);
@@ -45,26 +56,41 @@ export class AppHome {
     }
   }
 
-  async doStream() {
+  doStream() {
     this.streaming = true;
 
-    this.stream = await navigator.mediaDevices.getUserMedia({
-      audio: false,
-      video: {
-        facingMode: 'environment'
+    setTimeout(async () => {
+      this.videoEl = this.el.querySelector('video');
+
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { width: window.innerWidth, height: window.innerHeight, facingMode: { exact: "environment" } }
+      });
+
+      if (this.stream && this.videoEl) {
+        this.videoEl.srcObject = this.stream;
+
+        if ((window as any).ExperimentalBadge) {
+          (window as any).ExperimentalBadge.set()
+        }
+
+        console.log('connected stream to video element');
+        this.setUpCamera();
+
+        this.model = await cocoSsd.load();
+
+        console.log(this.model);
+
+        this.canvasElement = this.el.querySelector("#mainCanvas");
+        console.log(this.canvasElement);
+
+        (window as any).requestIdleCallback(() => {
+          console.log('starting');
+
+          this.start();
+        })
       }
-    });
-
-    if (this.stream) {
-      this.videoEl.srcObject = this.stream;
-
-      if ((window as any).ExperimentalBadge) {
-        (window as any).ExperimentalBadge.set()
-      }
-
-      console.log('connected stream to video element');
-      this.setUpCamera();
-    }
+    }, 500);
   }
 
   setUpCamera() {
@@ -73,6 +99,8 @@ export class AppHome {
   }
 
   async takePhoto() {
+    console.log('taking a photo');
+
     if (this.imageCapture) {
       const loading = await this.loadingCtrl.create({
         message: 'Thinking...'
@@ -86,16 +114,56 @@ export class AppHome {
 
       await loading.dismiss();
 
-      const modal = await this.modalCtrl.create({
-        component: "image-preview",
-        componentProps: {
-          image: imageBlob,
-          pred: pred.predictions[0]
-        }
-      });
-      await modal.present();
-      // await this.showPred(pred.predictions[0])
+      await this.showPred(pred.predictions[0])
     }
+  }
+
+  start = async () => {
+    this.context = this.canvasElement.getContext('2d');
+    // Classify the image.
+    const predictions = await this.model.detect(this.videoEl);
+    console.log(predictions);
+
+    if (this.context) {
+      this.context.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+    }
+
+    if (predictions && this.canvasElement) {
+      predictions.forEach((prediction: any) => {
+
+        if (this.context) {
+          const font = "16px sans-serif";
+          this.context.font = font;
+
+          const x = prediction.bbox[0];
+          const y = prediction.bbox[1];
+          const width = prediction.bbox[2];
+          const height = prediction.bbox[3];
+          // Draw the bounding box.
+          this.context.strokeStyle = "#8e2e8e";
+          this.context.lineWidth = 4;
+          this.context.strokeRect(x, y, width, height);
+          // Draw the label background.
+          this.context.fillStyle = "#8e2e8e";
+          const textWidth = this.context.measureText(prediction.class).width + 25;
+          const textHeight = parseInt(font, 16); // base 10
+          this.context.fillRect(x, y, textWidth, textHeight);
+        }
+      })
+
+      predictions.forEach((prediction: any) => {
+        const x = prediction.bbox[0];
+        const y = prediction.bbox[1];
+        // Draw the text last to ensure it's on top.
+
+        if (this.context) {
+          this.context.fillStyle = "white";
+          this.context.fillText(prediction.class, x + 10, y + 14);
+        }
+      })
+    }
+
+    this.startLoop = requestAnimationFrame(this.start)
   }
 
   async showPred(pred) {
@@ -109,6 +177,8 @@ export class AppHome {
       }
     } as any));
     await modal.present();
+
+    await modal.onDidDismiss();
   }
 
   async switchTheme() {
@@ -148,7 +218,11 @@ export class AppHome {
         {
           this.streaming ?
             <main>
-              <video autoplay id="mainVideo" ref={(el) => this.videoEl = el as HTMLVideoElement}></video>
+              <div>
+                <video width={window.innerWidth} height={window.innerHeight} autoplay id="mainVideo"></video>
+              </div>
+
+              <canvas onClick={() => this.takePhoto()} id="mainCanvas" height={window.innerHeight} width={window.innerWidth} />
             </main>
             :
             <div id='intro'>
@@ -167,11 +241,11 @@ export class AppHome {
             </div>
         }
 
-        {this.streaming ? <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+        {/*this.streaming ? <ion-fab vertical="bottom" horizontal="center" slot="fixed">
           <ion-fab-button onClick={() => this.takePhoto()}>
             <ion-icon name="eye"></ion-icon>
           </ion-fab-button>
-        </ion-fab> : null}
+      </ion-fab> : null*/}
 
       </ion-content>
     ];
