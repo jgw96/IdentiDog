@@ -1,10 +1,15 @@
-import { Component, Element, Prop } from '@stencil/core';
+import { Component, Element, Prop, h } from '@stencil/core';
 
 import { createActivity } from '../../services/graph';
 
 @Component({
   tag: 'pred-detail',
-  styleUrl: 'pred-detail.css'
+  styles: `
+    img {
+      border-radius: 10px;
+      width: 100%;
+    }
+  `
 })
 export class PredDetail {
 

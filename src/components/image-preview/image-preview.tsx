@@ -1,11 +1,46 @@
-import { Component, Element, Prop, State } from '@stencil/core';
+import { Component, Element, Prop, State, h } from '@stencil/core';
 
 import { doSearch } from '../../services/vision';
 
 
 @Component({
   tag: 'image-preview',
-  styleUrl: 'image-preview.css'
+  styles: `
+    #imagePreviewMain {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+    
+    #imagePreviewMain img {
+      object-fit: contain;
+      height: 100%;
+      width: 100%;
+      border-radius: initial;
+    }
+    
+    [data-theme="dark"] #imagePreviewMain img {
+      background: var(--ion-color-dark);
+    }
+    
+    #imagePreviewMain ion-button {
+      z-index: 9999;
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+    }
+    
+    #infoSection {
+      position: absolute;
+      color: white;
+      padding: 16px;
+    }
+    
+    #infoSection h1 {
+      font-size: 2em;
+    }
+  `
 })
 export class ImagePreview {
 

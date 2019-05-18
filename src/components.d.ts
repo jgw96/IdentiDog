@@ -5,75 +5,76 @@
  */
 
 
-import '@stencil/core';
-
-import '@ionic/core';
-import 'ionicons';
+import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
+import { JSX } from '@stencil/core';
 
 
 export namespace Components {
-
   interface AppHome {}
-  interface AppHomeAttributes extends StencilHTMLAttributes {}
-
   interface AppLogin {}
-  interface AppLoginAttributes extends StencilHTMLAttributes {}
-
   interface AppProfile {
     'name': string;
   }
-  interface AppProfileAttributes extends StencilHTMLAttributes {
-    'name'?: string;
-  }
-
   interface AppRoot {}
-  interface AppRootAttributes extends StencilHTMLAttributes {}
-
   interface ImagePreview {
     'image': any;
     'pred': any;
   }
-  interface ImagePreviewAttributes extends StencilHTMLAttributes {
-    'image'?: any;
-    'pred'?: any;
-  }
-
   interface PopoverPage {
     'userAgent': any;
   }
-  interface PopoverPageAttributes extends StencilHTMLAttributes {
-    'onLoggedOut'?: (event: CustomEvent) => void;
-    'userAgent'?: any;
-  }
-
   interface PredDetail {
     'data': any;
   }
-  interface PredDetailAttributes extends StencilHTMLAttributes {
+}
+
+declare namespace LocalJSX {
+  interface AppHome extends JSXBase.HTMLAttributes {}
+  interface AppLogin extends JSXBase.HTMLAttributes {}
+  interface AppProfile extends JSXBase.HTMLAttributes {
+    'name'?: string;
+  }
+  interface AppRoot extends JSXBase.HTMLAttributes {}
+  interface ImagePreview extends JSXBase.HTMLAttributes {
+    'image'?: any;
+    'pred'?: any;
+  }
+  interface PopoverPage extends JSXBase.HTMLAttributes {
+    'onLoggedOut'?: (event: CustomEvent<any>) => void;
+    'userAgent'?: any;
+  }
+  interface PredDetail extends JSXBase.HTMLAttributes {
     'data'?: any;
+  }
+
+  interface IntrinsicElements {
+    'app-home': AppHome;
+    'app-login': AppLogin;
+    'app-profile': AppProfile;
+    'app-root': AppRoot;
+    'image-preview': ImagePreview;
+    'popover-page': PopoverPage;
+    'pred-detail': PredDetail;
   }
 }
 
+export { LocalJSX as JSX };
+
+
+declare module "@stencil/core" {
+  export namespace JSX {
+    interface IntrinsicElements extends LocalJSX.IntrinsicElements {}
+  }
+}
+
+
 declare global {
-  interface StencilElementInterfaces {
-    'AppHome': Components.AppHome;
-    'AppLogin': Components.AppLogin;
-    'AppProfile': Components.AppProfile;
-    'AppRoot': Components.AppRoot;
-    'ImagePreview': Components.ImagePreview;
-    'PopoverPage': Components.PopoverPage;
-    'PredDetail': Components.PredDetail;
+
+  // Adding a global JSX for backcompatibility with legacy dependencies
+  export namespace JSX {
+    export interface Element {}
   }
 
-  interface StencilIntrinsicElements {
-    'app-home': Components.AppHomeAttributes;
-    'app-login': Components.AppLoginAttributes;
-    'app-profile': Components.AppProfileAttributes;
-    'app-root': Components.AppRootAttributes;
-    'image-preview': Components.ImagePreviewAttributes;
-    'popover-page': Components.PopoverPageAttributes;
-    'pred-detail': Components.PredDetailAttributes;
-  }
 
 
   interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {}
@@ -119,16 +120,6 @@ declare global {
   };
 
   interface HTMLElementTagNameMap {
-    'app-home': HTMLAppHomeElement
-    'app-login': HTMLAppLoginElement
-    'app-profile': HTMLAppProfileElement
-    'app-root': HTMLAppRootElement
-    'image-preview': HTMLImagePreviewElement
-    'popover-page': HTMLPopoverPageElement
-    'pred-detail': HTMLPredDetailElement
-  }
-
-  interface ElementTagNameMap {
     'app-home': HTMLAppHomeElement;
     'app-login': HTMLAppLoginElement;
     'app-profile': HTMLAppProfileElement;
@@ -138,13 +129,6 @@ declare global {
     'pred-detail': HTMLPredDetailElement;
   }
 
-
-  export namespace JSX {
-    export interface Element {}
-    export interface IntrinsicElements extends StencilIntrinsicElements {
-      [tagName: string]: any;
-    }
-  }
-  export interface HTMLAttributes extends StencilHTMLAttributes {}
-
+  interface ElementTagNameMap extends HTMLElementTagNameMap {}
 }
+

@@ -1,8 +1,12 @@
-import { Event, EventEmitter, Component, Prop } from '@stencil/core';
+import { Event, EventEmitter, Component, Prop, h } from '@stencil/core';
 
 @Component({
   tag: 'popover-page',
-  styleUrl: 'popover-page.css',
+  styles: `
+    ion-list ion-label {
+      font-weight: bold;
+    }
+  `,
   shadow: true
 })
 export class PopoverPage {

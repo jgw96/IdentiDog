@@ -1,4 +1,4 @@
-import { Component, State, Prop } from '@stencil/core';
+import { Component, State, Prop, h } from '@stencil/core';
 
 import { UserAgentApplication } from 'msal';
 
@@ -8,7 +8,25 @@ import { getUser, getProfilePhoto } from '../../services/graph';
 
 @Component({
   tag: 'app-login',
-  styleUrl: 'app-login.css'
+  styles: `
+    #profilePhoto {
+      width: 2.4em;
+      height: 2.4em;
+      border-radius: 50%;
+      margin-right: 12px;
+      border: solid white 2px;
+    }
+    
+    #loginDiv {
+      z-index: 9999;
+      position: fixed;
+      top: 0;
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      padding-top: 12px;
+    }
+  `
 })
 export class AppLogin {
 

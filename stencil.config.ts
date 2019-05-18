@@ -6,6 +6,8 @@ export const config: Config = {
   outputTargets: [
     {
       type: 'www',
+      baseUrl: 'https://identidog-app.firebaseapp.com/',
+      prerenderConfig: './prerender.config.js',
       serviceWorker: {
         swSrc: 'src/sw.js'
       }

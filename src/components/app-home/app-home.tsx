@@ -1,14 +1,76 @@
-import { Component, Element, Prop, State } from '@stencil/core';
+import { Component, Element, Prop, State, h } from '@stencil/core';
 
 import { identify, doSearch } from '../../services/vision';
 
-import * as cocoSsd from '@tensorflow-models/coco-ssd';
+// import * as cocoSsd from '@tensorflow-models/coco-ssd';
 
 declare var ImageCapture: any;
 
 @Component({
   tag: 'app-home',
-  styleUrl: 'app-home.css'
+  styles: `
+    #mainVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
+    }
+    
+    #intro {
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 1em;
+      margin: 2em;
+    }
+    
+    #intro img {
+      margin-bottom: 2em;
+      max-width: 26em;
+    }
+    
+    #intro p {
+      max-width: 28em;
+    }
+    
+    #darkModeButton {
+      z-index: 9999;
+      position: fixed;
+      top: 12px;
+    }
+    
+    #mainCanvas {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+    
+    #dogSpotted {
+      z-index: 9999;
+      position: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      top: 4em;
+      left: 8em;
+      right: 8em;
+      height: 2em;
+      background-color: rgba(244, 143, 177, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 22px;
+      font-weight: bold;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    }
+  `
 })
 export class AppHome {
 
@@ -20,6 +82,8 @@ export class AppHome {
 
   startLoop: number;
 
+  dogToast: HTMLIonToastElement | null = null;
+
   @Element() el: HTMLElement;
 
   @Prop({ connect: 'ion-toast-controller' }) toastCtrl: HTMLIonToastControllerElement | null = null;
@@ -27,7 +91,9 @@ export class AppHome {
   @Prop({ connect: 'ion-modal-controller' }) modalCtrl: HTMLIonModalControllerElement | null = null;
 
   @State() streaming: boolean = false;
-  @State() model: cocoSsd.ObjectDetection;
+  @State() model: any;
+  @State() takingPhoto: boolean = false;
+  @State() seeingDog: boolean = false;
 
   componentWillLoad() {
     const darkTheme = localStorage.getItem("theme");
@@ -77,7 +143,21 @@ export class AppHome {
         console.log('connected stream to video element');
         this.setUpCamera();
 
-        this.model = await cocoSsd.load();
+        const modelLoading = await this.loadingCtrl.create({
+          message: "Loading model..."
+        });
+        await modelLoading.present();
+
+        const coco = await import('@tensorflow-models/coco-ssd');
+        this.model = await coco.load();
+
+        await modelLoading.dismiss();
+
+        this.dogToast = await this.toastCtrl.create({
+          message: "Point at a dog and tap the screen",
+          showCloseButton: true
+        });
+        await this.dogToast.present();
 
         console.log(this.model);
 
@@ -100,19 +180,23 @@ export class AppHome {
 
   async takePhoto() {
     console.log('taking a photo');
+    this.takingPhoto = true;
+
+    if (this.dogToast) {
+      await this.dogToast.dismiss();
+    }
+
+    window.cancelAnimationFrame(this.startLoop);
+    this.startLoop = null;
 
     if (this.imageCapture) {
-      const loading = await this.loadingCtrl.create({
-        message: 'Thinking...'
-      });
-      await loading.present();
-
       const imageBlob = await this.imageCapture.takePhoto();
 
       const pred = await identify(imageBlob);
       console.log(pred);
 
-      await loading.dismiss();
+
+      this.takingPhoto = false;
 
       await this.showPred(pred.predictions[0])
     }
@@ -131,39 +215,34 @@ export class AppHome {
     if (predictions && this.canvasElement) {
       predictions.forEach((prediction: any) => {
 
-        if (this.context) {
-          const font = "16px sans-serif";
-          this.context.font = font;
+        if (prediction.class === "dog") {
+          this.seeingDog = true;
 
-          const x = prediction.bbox[0];
-          const y = prediction.bbox[1];
-          const width = prediction.bbox[2];
-          const height = prediction.bbox[3];
-          // Draw the bounding box.
-          this.context.strokeStyle = "#8e2e8e";
-          this.context.lineWidth = 4;
-          this.context.strokeRect(x, y, width, height);
-          // Draw the label background.
-          this.context.fillStyle = "#8e2e8e";
-          const textWidth = this.context.measureText(prediction.class).width + 25;
-          const textHeight = parseInt(font, 16); // base 10
-          this.context.fillRect(x, y, textWidth, textHeight);
+          if (this.context) {
+            const font = "16px sans-serif";
+            this.context.font = font;
+
+            const x = prediction.bbox[0];
+            const y = prediction.bbox[1];
+            const width = prediction.bbox[2];
+            const height = prediction.bbox[3];
+            // Draw the bounding box.
+            this.context.strokeStyle = "#8e2e8e";
+            this.context.lineWidth = 4;
+            this.context.strokeRect(x, y, width, height);
+          }
         }
-      })
-
-      predictions.forEach((prediction: any) => {
-        const x = prediction.bbox[0];
-        const y = prediction.bbox[1];
-        // Draw the text last to ensure it's on top.
-
-        if (this.context) {
-          this.context.fillStyle = "white";
-          this.context.fillText(prediction.class, x + 10, y + 14);
+        else {
+          this.seeingDog = false;
         }
+
       })
     }
 
-    this.startLoop = requestAnimationFrame(this.start)
+    if (!this.takingPhoto) {
+      this.startLoop = requestAnimationFrame(this.start);
+    }
+    // setInterval(this.start, 100);
   }
 
   async showPred(pred) {
@@ -179,6 +258,12 @@ export class AppHome {
     await modal.present();
 
     await modal.onDidDismiss();
+
+    (window as any).requestIdleCallback(() => {
+      console.log('starting');
+
+      this.start();
+    })
   }
 
   async switchTheme() {
@@ -218,6 +303,13 @@ export class AppHome {
         {
           this.streaming ?
             <main>
+
+              <div id="dogSpotted">
+                {
+                  this.seeingDog ? <span>Dog spotted</span> : <span>No dog spotted</span>
+                }
+              </div>
+
               <div>
                 <video width={window.innerWidth} height={window.innerHeight} autoplay id="mainVideo"></video>
               </div>
@@ -246,6 +338,10 @@ export class AppHome {
             <ion-icon name="eye"></ion-icon>
           </ion-fab-button>
       </ion-fab> : null*/}
+
+        {
+          this.takingPhoto ? <ion-progress-bar id="loadingBar" type="indeterminate"></ion-progress-bar> : null
+        }
 
       </ion-content>
     ];
