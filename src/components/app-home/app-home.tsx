@@ -45,7 +45,14 @@ declare var ImageCapture: any;
       position: fixed;
       top: 12px;
     }
-    
+
+    #shareButton {
+      z-index: 9999;
+      position: fixed;
+      top: 12px;
+      right: 0px;
+    }
+
     #mainCanvas {
       position: fixed;
       top: 0;
@@ -291,14 +298,42 @@ export class AppHome {
     }
   }
 
+  async share() {
+    console.log('here');
+    this.takingPhoto = true;
+
+    const imageBlob = await this.imageCapture.takePhoto();
+
+    const imageFile = new File([imageBlob], "dog.jpg");
+    console.log(imageFile);
+    const shareData = { files: [imageFile] };
+
+    if ((navigator as any).canShare && (navigator as any).canShare(shareData)) {
+      (navigator as any).share({
+        files: shareData.files,
+        title: 'New dog identified',
+        text: 'I identified a new dog with IdentiDog',
+      })
+        .then(() => {
+          this.takingPhoto = false;
+        })
+        .catch((error) => console.log('Sharing failed', error));
+    } else {
+      console.log('Your system doesn\'t support sharing files.');
+      this.takingPhoto = false;
+    }
+  }
+
   render() {
     return [
       <ion-content>
-        <app-login></app-login>
-
         <ion-button onClick={() => this.switchTheme()} fill="clear" id="darkModeButton">
           <ion-icon name="moon"></ion-icon>
         </ion-button>
+
+        {(navigator as any).share ? <ion-button onClick={() => this.share()} id="shareButton" fill="clear">
+          <ion-icon name="share"></ion-icon>
+        </ion-button> : null}
 
         {
           this.streaming ?
