@@ -137,7 +137,7 @@ export class AppHome {
 
       this.stream = await navigator.mediaDevices.getUserMedia({
         audio: false,
-        video: { width: window.innerWidth, height: window.innerHeight, facingMode: { exact: "environment" } }
+        video: { width: window.innerWidth, height: window.innerHeight, facingMode: "environment" }
       });
 
       if (this.stream && this.videoEl) {
@@ -150,34 +150,55 @@ export class AppHome {
         console.log('connected stream to video element');
         this.setUpCamera();
 
-        const modelLoading = await this.loadingCtrl.create({
-          message: "Loading model..."
-        });
-        await modelLoading.present();
+        // If on a modern browser that supports the deviceMemory API
+        // dont load the big Coco model unless this is a powerful device
+        // which were assuming to be anything with atleast 4gb of RAM
+        if ((navigator as any).deviceMemory && (navigator as any).deviceMemory >= 4) {
+          await this.loadCocoModel();
 
-        const coco = await import('@tensorflow-models/coco-ssd');
-        this.model = await coco.load();
+          this.canvasElement = this.el.querySelector("#mainCanvas");
+          console.log(this.canvasElement);
 
-        await modelLoading.dismiss();
+          (window as any).requestIdleCallback(() => {
+            console.log('starting');
+
+            this.start();
+          })
+        }
+        else if (!(navigator as any).deviceMemory) {
+          // deviceMemory API not supported so eff it and
+          // just load the model
+          await this.loadCocoModel();
+
+          this.canvasElement = this.el.querySelector("#mainCanvas");
+          console.log(this.canvasElement);
+
+          (window as any).requestIdleCallback(() => {
+            console.log('starting');
+
+            this.start();
+          })
+        }
 
         this.dogToast = await this.toastCtrl.create({
           message: "Point at a dog and tap the screen",
           showCloseButton: true
         });
         await this.dogToast.present();
-
-        console.log(this.model);
-
-        this.canvasElement = this.el.querySelector("#mainCanvas");
-        console.log(this.canvasElement);
-
-        (window as any).requestIdleCallback(() => {
-          console.log('starting');
-
-          this.start();
-        })
       }
     }, 500);
+  }
+
+  async loadCocoModel() {
+    const modelLoading = await this.loadingCtrl.create({
+      message: "Loading model..."
+    });
+    await modelLoading.present();
+
+    const coco = await import('@tensorflow-models/coco-ssd');
+    this.model = await coco.load();
+
+    await modelLoading.dismiss();
   }
 
   setUpCamera() {
@@ -212,6 +233,7 @@ export class AppHome {
   start = async () => {
     this.context = this.canvasElement.getContext('2d');
     // Classify the image.
+
     const predictions = await this.model.detect(this.videoEl);
     console.log(predictions);
 
@@ -266,11 +288,13 @@ export class AppHome {
 
     await modal.onDidDismiss();
 
-    (window as any).requestIdleCallback(() => {
-      console.log('starting');
+    if (this.model) {
+      (window as any).requestIdleCallback(() => {
+        console.log('starting');
 
-      this.start();
-    })
+        this.start();
+      })
+    }
   }
 
   async switchTheme() {
@@ -331,7 +355,7 @@ export class AppHome {
           <ion-icon name="moon"></ion-icon>
         </ion-button>
 
-        {(navigator as any).share ? <ion-button onClick={() => this.share()} id="shareButton" fill="clear">
+        {(navigator as any).share && this.streaming ? <ion-button onClick={() => this.share()} id="shareButton" fill="clear">
           <ion-icon name="share"></ion-icon>
         </ion-button> : null}
 
