@@ -1,6 +1,6 @@
 import { Component, Element, Prop, h } from '@stencil/core';
 
-import { createActivity } from '../../services/graph';
+// import { createActivity } from '../../services/graph';
 
 @Component({
   tag: 'pred-detail',
@@ -9,13 +9,17 @@ import { createActivity } from '../../services/graph';
       border-radius: 10px;
       width: 100%;
     }
+
+    #predDetailContent {
+      padding: 16px;
+    }
   `
 })
 export class PredDetail {
 
   @Prop() data: any;
   @Prop({ connect: 'ion-action-sheet-controller' }) actionSheetCtrl: HTMLIonActionSheetControllerElement;
-  @Prop({ connect: "ion-toast-controller"}) toastCtrl: HTMLIonToastControllerElement;
+  @Prop({ connect: "ion-toast-controller" }) toastCtrl: HTMLIonToastControllerElement;
 
   @Element() el: HTMLElement;
 
@@ -28,7 +32,7 @@ export class PredDetail {
   }
 
   async share() {
-    const token = sessionStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
 
     const actionSheet = await this.actionSheetCtrl.create({
       header: "Share",
@@ -48,7 +52,7 @@ export class PredDetail {
             }
           }
         },
-        {
+        /*{
           text: "Share to Windows Timeilne",
           icon: "logo-windows",
           handler: async () => {
@@ -108,7 +112,7 @@ export class PredDetail {
               }
             }
           }
-        }
+        }*/
       ]
     });
 
@@ -135,19 +139,20 @@ export class PredDetail {
         </ion-toolbar>
       </ion-header>,
 
-      <ion-content padding>
-        <dv id="imageBlock">
-          <img height={this.data.image.sourceHeight} src={this.data.image.hostPageUrl.replace('http', 'https')} alt={this.data.image.name}></img>
-          <a href={this.data.image.provider[0].url}>Source</a>
-        </dv>
+      <ion-content>
+        <div id="predDetailContent">
+          <dv id="imageBlock">
+            <img height={this.data.image.sourceHeight} src={this.data.image.hostPageUrl.replace('http', 'https')} alt={this.data.image.name}></img>
+            <a href={this.data.image.provider[0].url}>Source</a>
+          </dv>
 
-        <div id="infoBlock">
-          <p>{this.data.description}</p>
-        </div>
+          <div id="infoBlock">
+            <p>{this.data.description}</p>
+          </div>
 
-        <ion-button shape="round" expand="block" href={this.data.webSearchUrl}>Search with Bing</ion-button>
+          <ion-button shape="round" expand="block" href={this.data.webSearchUrl}>Search with Bing</ion-button>
 
-        {/*<amp-ad width="100vw" height="320"
+          {/*<amp-ad width="100vw" height="320"
           type="adsense"
           data-ad-client="ca-pub-7724672580435259"
           data-ad-slot="3649297059"
@@ -155,6 +160,7 @@ export class PredDetail {
           data-full-width>
             <span>Loading...</span>
     </amp-ad>*/}
+        </div>
       </ion-content>
     ];
   }

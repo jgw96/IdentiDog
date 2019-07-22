@@ -6,7 +6,6 @@
 
 
 import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
-import { JSX } from '@stencil/core';
 
 
 export namespace Components {
@@ -28,53 +27,7 @@ export namespace Components {
   }
 }
 
-declare namespace LocalJSX {
-  interface AppHome extends JSXBase.HTMLAttributes {}
-  interface AppLogin extends JSXBase.HTMLAttributes {}
-  interface AppProfile extends JSXBase.HTMLAttributes {
-    'name'?: string;
-  }
-  interface AppRoot extends JSXBase.HTMLAttributes {}
-  interface ImagePreview extends JSXBase.HTMLAttributes {
-    'image'?: any;
-    'pred'?: any;
-  }
-  interface PopoverPage extends JSXBase.HTMLAttributes {
-    'onLoggedOut'?: (event: CustomEvent<any>) => void;
-    'userAgent'?: any;
-  }
-  interface PredDetail extends JSXBase.HTMLAttributes {
-    'data'?: any;
-  }
-
-  interface IntrinsicElements {
-    'app-home': AppHome;
-    'app-login': AppLogin;
-    'app-profile': AppProfile;
-    'app-root': AppRoot;
-    'image-preview': ImagePreview;
-    'popover-page': PopoverPage;
-    'pred-detail': PredDetail;
-  }
-}
-
-export { LocalJSX as JSX };
-
-
-declare module "@stencil/core" {
-  export namespace JSX {
-    interface IntrinsicElements extends LocalJSX.IntrinsicElements {}
-  }
-}
-
-
 declare global {
-
-  // Adding a global JSX for backcompatibility with legacy dependencies
-  export namespace JSX {
-    export interface Element {}
-  }
-
 
 
   interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {}
@@ -118,7 +71,6 @@ declare global {
     prototype: HTMLPredDetailElement;
     new (): HTMLPredDetailElement;
   };
-
   interface HTMLElementTagNameMap {
     'app-home': HTMLAppHomeElement;
     'app-login': HTMLAppLoginElement;
@@ -128,7 +80,45 @@ declare global {
     'popover-page': HTMLPopoverPageElement;
     'pred-detail': HTMLPredDetailElement;
   }
-
-  interface ElementTagNameMap extends HTMLElementTagNameMap {}
 }
+
+declare namespace LocalJSX {
+  interface AppHome extends JSXBase.HTMLAttributes<HTMLAppHomeElement> {}
+  interface AppLogin extends JSXBase.HTMLAttributes<HTMLAppLoginElement> {}
+  interface AppProfile extends JSXBase.HTMLAttributes<HTMLAppProfileElement> {
+    'name'?: string;
+  }
+  interface AppRoot extends JSXBase.HTMLAttributes<HTMLAppRootElement> {}
+  interface ImagePreview extends JSXBase.HTMLAttributes<HTMLImagePreviewElement> {
+    'image'?: any;
+    'pred'?: any;
+  }
+  interface PopoverPage extends JSXBase.HTMLAttributes<HTMLPopoverPageElement> {
+    'onLoggedOut'?: (event: CustomEvent<any>) => void;
+    'userAgent'?: any;
+  }
+  interface PredDetail extends JSXBase.HTMLAttributes<HTMLPredDetailElement> {
+    'data'?: any;
+  }
+
+  interface IntrinsicElements {
+    'app-home': AppHome;
+    'app-login': AppLogin;
+    'app-profile': AppProfile;
+    'app-root': AppRoot;
+    'image-preview': ImagePreview;
+    'popover-page': PopoverPage;
+    'pred-detail': PredDetail;
+  }
+}
+
+export { LocalJSX as JSX };
+
+
+declare module "@stencil/core" {
+  export namespace JSX {
+    interface IntrinsicElements extends LocalJSX.IntrinsicElements {}
+  }
+}
+
 

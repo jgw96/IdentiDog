@@ -15,14 +15,14 @@
     "test.watch": "stencil test --spec --e2e --watch"
   },
   "dependencies": {
-    "@ionic/core": "^4.5.0-dev.201905161618.0dec314",
-    "@tensorflow-models/coco-ssd": "^1.0.2",
-    "@tensorflow-models/mobilenet": "^1.0.1",
-    "@tensorflow/tfjs": "^1.1.2",
+    "@ionic/core": "^4.6.2",
+    "@tensorflow-models/coco-ssd": "^1.1.1",
+    "@tensorflow-models/mobilenet": "^2.0.2",
+    "@tensorflow/tfjs": "^1.2.3",
     "msal": "^0.2.4"
   },
   "devDependencies": {
-    "@stencil/core": "^1.0.0-beta.0",
+    "@stencil/core": "^1.1.7",
     "workbox-build": "4.3.1"
   }
 }

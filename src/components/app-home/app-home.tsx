@@ -34,6 +34,8 @@ declare var ImageCapture: any;
     #intro img {
       margin-bottom: 2em;
       max-width: 26em;
+      min-height: 315px;
+      margin: 2em;
     }
     
     #intro p {
@@ -60,6 +62,13 @@ declare var ImageCapture: any;
       left: 0;
       right: 0;
     }
+
+    #stopStreamButton {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      z-index: 9999;
+    }
     
     #dogSpotted {
       z-index: 9999;
@@ -76,6 +85,13 @@ declare var ImageCapture: any;
       border-radius: 22px;
       font-weight: bold;
       box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    }
+
+    @media(max-width: 380px) {
+      #dogSpotted {
+        left: 4em;
+        right: 4em;
+      }
     }
   `
 })
@@ -189,9 +205,16 @@ export class AppHome {
     }, 500);
   }
 
+  pauseStream() {
+    const mediaStreamTrack = this.stream.getVideoTracks()[0];
+    mediaStreamTrack.stop();
+    this.streaming = false;
+    this.stream = null;
+  }
+
   async loadCocoModel() {
     const modelLoading = await this.loadingCtrl.create({
-      message: "Loading model..."
+      message: "Loading AI..."
     });
     await modelLoading.present();
 
@@ -235,7 +258,6 @@ export class AppHome {
     // Classify the image.
 
     const predictions = await this.model.detect(this.videoEl);
-    console.log(predictions);
 
     if (this.context) {
       this.context.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
@@ -275,6 +297,10 @@ export class AppHome {
   }
 
   async showPred(pred) {
+    if (this.dogToast) {
+      this.dogToast.dismiss();
+    };
+
     const data = await doSearch(pred.tagName);
     console.log(data);
 
@@ -371,6 +397,10 @@ export class AppHome {
 
               <div>
                 <video width={window.innerWidth} height={window.innerHeight} autoplay id="mainVideo"></video>
+              </div>
+
+              <div>
+                <ion-button id="stopStreamButton" onClick={() => this.pauseStream()}>Stop</ion-button>
               </div>
 
               <canvas onClick={() => this.takePhoto()} id="mainCanvas" height={window.innerHeight} width={window.innerWidth} />
