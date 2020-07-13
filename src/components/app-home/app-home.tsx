@@ -2,8 +2,6 @@ import { Component, Element, Prop, State, h } from '@stencil/core';
 
 import { identify, doSearch } from '../../services/vision';
 
-// import * as cocoSsd from '@tensorflow-models/coco-ssd';
-
 declare var ImageCapture: any;
 
 @Component({
@@ -46,6 +44,12 @@ declare var ImageCapture: any;
       z-index: 9999;
       position: fixed;
       top: 12px;
+    }
+
+    @media(prefers-color-scheme: dark) {
+      #darkModeButton {
+        display: none;
+      }
     }
 
     #shareButton {
@@ -114,7 +118,6 @@ export class AppHome {
   @Prop({ connect: 'ion-modal-controller' }) modalCtrl: HTMLIonModalControllerElement | null = null;
 
   @State() streaming: boolean = false;
-  @State() model: any;
   @State() takingPhoto: boolean = false;
   @State() seeingDog: boolean = false;
 
@@ -166,36 +169,6 @@ export class AppHome {
         console.log('connected stream to video element');
         this.setUpCamera();
 
-        // If on a modern browser that supports the deviceMemory API
-        // dont load the big Coco model unless this is a powerful device
-        // which were assuming to be anything with atleast 4gb of RAM
-        if ((navigator as any).deviceMemory && (navigator as any).deviceMemory >= 4) {
-          await this.loadCocoModel();
-
-          this.canvasElement = this.el.querySelector("#mainCanvas");
-          console.log(this.canvasElement);
-
-          (window as any).requestIdleCallback(() => {
-            console.log('starting');
-
-            this.start();
-          })
-        }
-        else if (!(navigator as any).deviceMemory) {
-          // deviceMemory API not supported so eff it and
-          // just load the model
-          await this.loadCocoModel();
-
-          this.canvasElement = this.el.querySelector("#mainCanvas");
-          console.log(this.canvasElement);
-
-          (window as any).requestIdleCallback(() => {
-            console.log('starting');
-
-            this.start();
-          })
-        }
-
         this.dogToast = await this.toastCtrl.create({
           message: "Point at a dog and tap the screen",
           showCloseButton: true
@@ -210,18 +183,6 @@ export class AppHome {
     mediaStreamTrack.stop();
     this.streaming = false;
     this.stream = null;
-  }
-
-  async loadCocoModel() {
-    const modelLoading = await this.loadingCtrl.create({
-      message: "Loading AI..."
-    });
-    await modelLoading.present();
-
-    const coco = await import('@tensorflow-models/coco-ssd');
-    this.model = await coco.load();
-
-    await modelLoading.dismiss();
   }
 
   setUpCamera() {
@@ -253,49 +214,6 @@ export class AppHome {
     }
   }
 
-  start = async () => {
-    this.context = this.canvasElement.getContext('2d');
-    // Classify the image.
-
-    const predictions = await this.model.detect(this.videoEl);
-
-    if (this.context) {
-      this.context.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
-    }
-
-    if (predictions && this.canvasElement) {
-      predictions.forEach((prediction: any) => {
-
-        if (prediction.class === "dog") {
-          this.seeingDog = true;
-
-          if (this.context) {
-            const font = "16px sans-serif";
-            this.context.font = font;
-
-            const x = prediction.bbox[0];
-            const y = prediction.bbox[1];
-            const width = prediction.bbox[2];
-            const height = prediction.bbox[3];
-            // Draw the bounding box.
-            this.context.strokeStyle = "#8e2e8e";
-            this.context.lineWidth = 4;
-            this.context.strokeRect(x, y, width, height);
-          }
-        }
-        else {
-          this.seeingDog = false;
-        }
-
-      })
-    }
-
-    if (!this.takingPhoto) {
-      this.startLoop = requestAnimationFrame(this.start);
-    }
-    // setInterval(this.start, 100);
-  }
-
   async showPred(pred) {
     if (this.dogToast) {
       this.dogToast.dismiss();
@@ -313,14 +231,6 @@ export class AppHome {
     await modal.present();
 
     await modal.onDidDismiss();
-
-    if (this.model) {
-      (window as any).requestIdleCallback(() => {
-        console.log('starting');
-
-        this.start();
-      })
-    }
   }
 
   async switchTheme() {
@@ -377,23 +287,17 @@ export class AppHome {
   render() {
     return [
       <ion-content>
-        <ion-button onClick={() => this.switchTheme()} fill="clear" id="darkModeButton">
-          <ion-icon name="moon"></ion-icon>
-        </ion-button>
+        <ion-fab-button onClick={() => this.switchTheme()} size="small" id="darkModeButton">
+          <ion-icon size="small" name="moon"></ion-icon>
+        </ion-fab-button>
 
-        {(navigator as any).share && this.streaming ? <ion-button onClick={() => this.share()} id="shareButton" fill="clear">
-          <ion-icon name="share"></ion-icon>
-        </ion-button> : null}
+        {(navigator as any).share && this.streaming ? <ion-fab-button onClick={() => this.share()} id="shareButton" size="small">
+          <ion-icon size="small" name="share"></ion-icon>
+        </ion-fab-button> : null}
 
         {
           this.streaming ?
             <main>
-
-              <div id="dogSpotted">
-                {
-                  this.seeingDog ? <span>Dog spotted</span> : <span>No dog spotted</span>
-                }
-              </div>
 
               <div>
                 <video width={window.innerWidth} height={window.innerHeight} autoplay id="mainVideo"></video>
@@ -421,12 +325,6 @@ export class AppHome {
               <ion-button onClick={() => this.doStream()}>Get Started</ion-button>
             </div>
         }
-
-        {/*this.streaming ? <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-          <ion-fab-button onClick={() => this.takePhoto()}>
-            <ion-icon name="eye"></ion-icon>
-          </ion-fab-button>
-      </ion-fab> : null*/}
 
         {
           this.takingPhoto ? <ion-progress-bar id="loadingBar" type="indeterminate"></ion-progress-bar> : null
